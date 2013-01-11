@@ -5,12 +5,40 @@
 -->
 <project name="phing-drupal" default="clean" phingVersion="2.4.11">
     <property name="module_name" value="Insert module name here" />
+    <property name="drupal.dir" value="${project.basedir}/drupal/" />
+    <property name="drupal.sites" value="${drupal.dir}/sites" />
+    <property name="drupal.all_modules" value="${drupal.sites}/all/modules" />
+    
+    <target name="setup-filesets">
+        <patternset id="php">
+          <include name="**/*.php" />
+          <include name="**/*.module" />
+          <include name="**/*.install" />
+          <include name="**/*.inc" />
+          <include name="**/*.profile" />
+          <include name="**/*.test" />
+        </patternset>
+        <patternset id="js">
+          <include name="**/*.js" />
+          <exclude name="**/*.min.js" />
+        </patternset>
+        <patternset id="css">
+          <include name="**/*.css" />
+        </patternset>
+        <fileset id="src.php" dir="${project.basedir}/${module_name}">
+          <patternset refid="php"/>
+        </fileset>
+        <fileset id="src.js" dir="${project.basedir}/${module_name}">
+          <patternset refid="js"/>
+        </fileset>
+        <fileset id="src.css" dir="${project.basedir}/${module_name}">
+          <patternset refid="css"/>
+        </fileset>
+    </target>
     
     <target name="clean"
         description="Clean up and create artifact directories"
         unless="project.cleaned">
-        <!-- Delete any existing artifacts from a previous build.
-        Do not delete builddir. It may contain the build file! -->
         <delete dir="${project.basedir}/build/api"/>
         <delete dir="${project.basedir}/build/code-browser"/>
         <delete dir="${project.basedir}/build/coverage"/>
@@ -23,9 +51,30 @@
         <mkdir dir="${project.basedir}/build/logs"/>
         <mkdir dir="${project.basedir}/build/pdepend"/>
         <mkdir dir="${project.basedir}/build/behat"/>
-
-        <!-- Set property to prevent target from being executed multiple times -->
         <property name="project.cleaned" value="true"/>
     </target>
+    
+    <target name="move-module" unless="project.module_installed">
+        <symlink target="${project.basedir}/${module_name}" link="${drupal.all_modules}/${module_name}" />
+        <symlink target="${project.basedir}/${module_name}/tests/config"
+                 link="${project.basedir}/tests/config" />
+        <symlink target="${project.basedir}/${module_name}/tests/tests"
+                 link="${project.basedir}/tests/tests" />
+        <symlink target="${project.basedir}/${module_name}/tests/src"
+                 link="${project.basedir}/tests/src" />
+        <symlink target="${project.basedir}/${module_name}/tests/features"
+                 link="${project.basedir}/tests/features" />
+        <property name="project.module_installed" value="true"/>
+    </target>
+    
+    <target name="lint-php"
+        description="Check all PHP files for syntax errors using PHPLint"
+        depends="init">
+        <phplint haltonfailure="true">
+            <fileset refid="src.php" />
+        </phplint>
+    </target>
+    
+    <target name="init" depends="clean,setup-filesets" />
     
 </project>
