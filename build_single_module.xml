@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+@copyright The Royal National Theatre
+@author John-Paul Drawneek <jdrawneek@nationaltheatre.org.uk>
+-->
+<project name="phing-drupal" default="clean" phingVersion="2.4.11">
+    <property name="module_name" value="Insert module name here" />
+    
+    <target name="clean"
+        description="Clean up and create artifact directories"
+        unless="project.cleaned">
+        <!-- Delete any existing artifacts from a previous build.
+        Do not delete builddir. It may contain the build file! -->
+        <delete dir="${project.basedir}/build/api"/>
+        <delete dir="${project.basedir}/build/code-browser"/>
+        <delete dir="${project.basedir}/build/coverage"/>
+        <delete dir="${project.basedir}/build/logs"/>
+        <delete dir="${project.basedir}/build/pdepend"/>
+        <delete dir="${project.basedir}/build/behat"/>
+        <mkdir dir="${project.basedir}/build/api"/>
+        <mkdir dir="${project.basedir}/build/code-browser"/>
+        <mkdir dir="${project.basedir}/build/coverage"/>
+        <mkdir dir="${project.basedir}/build/logs"/>
+        <mkdir dir="${project.basedir}/build/pdepend"/>
+        <mkdir dir="${project.basedir}/build/behat"/>
+
+        <!-- Set property to prevent target from being executed multiple times -->
+        <property name="project.cleaned" value="true"/>
+    </target>
+    
+</project>

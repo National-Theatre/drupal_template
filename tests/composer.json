@@ -1,0 +1,44 @@
+{
+    "require": {
+        "behat/behat": ">=2.4@stable",
+	"behat/mink": ">=1.4@stable",
+        
+        "behat/mink-goutte-driver": 	"*",
+        "behat/mink-selenium-driver": 	"*",
+        "behat/mink-selenium2-driver": 	"*",
+        "behat/mink-sahi-driver": 	"*",
+        
+	"behat/mink-extension": 	"*",
+	"drupal/drupal-extension":	"*",
+
+        "phing/phing":                  ">=2.4.14@stable",
+	"phpunit/phpunit":              ">=3.7.1@stable",
+	"pdepend/pdepend":		">=1.1.0@stable",
+	"phpmd/phpmd":			">=1.4.1@stable",
+        "squizlabs/php_codesniffer":    ">=1.4@stable",
+
+	"NT/drupal-phpunit":		"*"
+    },
+
+    "config": {
+        "bin-dir": "bin/"        
+    },
+    "minimum-stability": "dev",
+    "repositories": [
+	{
+	  "type": "vcs",
+	  "url": "git://git.drupal.org/project/drupalextension.git"
+	},
+	{
+	  "type": "vcs",
+	  "url": "https://github.com/jpd4nt/drupal-phpunit.git"
+	}
+    ],
+    "autoload": {
+        "psr-0": {
+            "NT\\Test\\Fixtures": "src"
+        },
+        "classmap": [
+        ]
+    }
+}
